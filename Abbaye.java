@@ -10,7 +10,7 @@ public class Abbaye extends TuileCarcassonne {
         if (champsAdjacents.size() >= 11){
             Abbaye.points = 8; // TODO: nb à modifier
         } else {
-            Abbaye.points = 0; 
+            Abbaye.points = 0;  
         } 
     }
 
