@@ -9,7 +9,7 @@ public class Controleur {
     public void setVue(Vue vue){
         this.vue = vue;
     }
-    public void tuileTournee(JPanel tuilePiochee){
+    public void tuileTournee(JPanel tuilePiochee) {
         modele.setTuilePiochee(tuilePiochee);
         vue.miseAJourTuilePiochee();
     }
