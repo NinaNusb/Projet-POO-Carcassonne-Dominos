@@ -3,8 +3,8 @@
 Il s'agit d'un projet permettant de jouer à Dominos ou à Carcassonne.
 
 ## Règles du jeu
-- Retrouvez les règles de Dominos ici: [text](https://www.agoralude.com/blog/la-regle-du-jeu-de-dominos-n33)
-- Retrouvez les règles de Carcassonne ici: [text](https://www.jeuxavolonte.asso.fr/regles/carcassonne.pdf)
+- Retrouvez les règles de Dominos [ici](https://www.agoralude.com/blog/la-regle-du-jeu-de-dominos-n33)
+- Retrouvez les règles de Carcassonne [ici](https://www.jeuxavolonte.asso.fr/regles/carcassonne.pdf)
 
 ## Pré-requis
 - Java
