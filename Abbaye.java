@@ -1,17 +1,9 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 
-public class Abbaye extends Lieu {
-    private LinkedList<Champ> champsAdjacents = new LinkedList<Champ>();
-    static int points; 
-    
-    public Abbaye(Lieu[] lieux){
-        super(lieux);
-        // Les points d'une abbaye ne sont compatabilisés que si elle est entourée de champs
-        if (champsAdjacents.size() >= 11){
-            Abbaye.points = 8; // TODO: nb à modifier
-        } else {
-            Abbaye.points = 0;  
-        } 
+public class Abbaye extends Lieu { // TODO : à voir si cette classe sert à quelque chose
+
+    public Abbaye(){
+        this.points = 0;
     }
 
     public boolean estTerminee(){
