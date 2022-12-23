@@ -1,20 +1,15 @@
-import java.util.LinkedList;
-
 public class Champ extends Lieu{
-    private LinkedList<Champ> parcelles = new LinkedList<Champ>();
-    static int points; 
-    
-    public Champ(Lieu[] lieux){
-        super(lieux);
-        Champ.points = parcelles.size();
+
+    public Champ(){
+        this.points = 1;
     }
 
-    public boolean estTerminee(){
-        if (Jeu.jeuFini()){ //|| /*si les tuiles adjacentes sont des villes ou des routes*/){ TODO: table = null ??
+    /*public boolean estTerminee(){
+        if (Jeu.jeuFini()){ //|| si les tuiles adjacentes sont des villes ou des routes){ TODO: table = null ??
             return true;
         }
         return false;
-    }
+    }*/
 
     // // Renvoie le nombre de partisans placés sur un ensemble de tuiles de même type
     // public int partisansEnJeu(JoueurCarcassonne j){
