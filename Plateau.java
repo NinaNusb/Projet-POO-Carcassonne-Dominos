@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
 
-public class Plateau{
+public abstract class Plateau{
     // attributs
     protected final ArrayList<ArrayList<Emplacement>> plateau;
     protected final ArrayList<ArrayList<Integer>> matriceAdjacence;
@@ -17,40 +17,14 @@ public class Plateau{
         this.matriceAdjacence = new ArrayList<>();
         this.matriceAdjacence.add(new ArrayList<>());
         this.matriceAdjacence.get(0).add(-1);
-
-        // dans le cas où on joue au domino
-        if (sac instanceof SacDomino) {
-            // on pioche la tuile de départ au hasard et on pose au milieu du plateau
-            this.ajouterTuile(this.plateau.get(0).get(0), sac.piocheTuile());
-        }
-        // dans le cas où on joue à Carcassonne
-        else {
-            // on définit la tuile de départ qui est toujours la même
-            Lieu[] haut = new Lieu[3];
-            Lieu[] droite = new Lieu[3];
-            Lieu[] bas = new Lieu[3];
-            Lieu[] gauche = new Lieu[3];
-            haut[0] = new Ville(haut);
-            haut[1] = new Ville(haut);
-            haut[2] = new Ville(haut);
-            droite[0] = new Champ(droite);
-            droite[1] = new Route(droite);
-            droite[2] = new Champ(droite);
-            bas[0] = new Champ(bas);
-            bas[1] = new Champ(bas);
-            bas[2] = new Champ(bas);
-            gauche[0] = new Champ(gauche);
-            gauche[1] = new Route(gauche);
-            gauche[2] = new Champ(gauche);
-            this.ajouterTuile(this.plateau.get(0).get(0), new TuileCarcassonne(haut, droite, bas, gauche, new File("C:/Dossier personnel/Documents/Projet-POO-Carcassonne-Dominos/Images/Base_Game_C2_Tile_Z.jpg"), false)); 
-            // Nina: C:/Dossier personnel/Documents/Projet-POO-Carcassonne-Dominos/Images/Base_Game_C2_Tile_Z.jpg
-            // Mathilde: C:/Users/carol/IdeaProjects/Carcassonne V2/src/Image tuile/Base_Game_C2_Tile_Z.jpg
-        }
     }
 
     // tous les getteurs nécessaires
     public ArrayList<ArrayList<Emplacement>> getPlateau(){
         return this.plateau;
+    }
+    public ArrayList<ArrayList<Integer>> getMatriceAdjacence(){
+        return this.matriceAdjacence;
     }
 
     // méthode pour ajouter une tuile au plateau
