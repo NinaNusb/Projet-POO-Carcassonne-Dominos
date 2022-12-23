@@ -1,16 +1,8 @@
-import java.util.LinkedList;
-
 public class Ville extends Lieu{
-    private LinkedList<Ville> quartiers = new LinkedList<Ville>();
-    static int points; 
-        
-    public Ville(Lieu[] lieux){
-        super(lieux);
-        if (estTerminee()){
-            Ville.points = quartiers.size();
-        } else {
-            Ville.points = 0;
-        }
+
+    public Ville(){
+        this.points = 2;
+        // TODO il va falloir traiter les blasons
     }
 
     public boolean estTerminee(){
@@ -36,7 +28,7 @@ public class Ville extends Lieu{
     // public int nbPartisanJoueurQuiJoue(int indiceJoueur){ // NOTE_TO_MYSELF: Quand on appelle la méthode il faut utiliser JoueurCarcassonne.joueurQuiJoue
     //     int nbPartisanJoueurQuiJoue = 0;
     //     for (Ville c: quartiers){
-    //         if (c.possesseurPartisan == indiceJoueur){ 
+    //         if (c.possesseurPartisan == indiceJoueur){
     //             nbPartisanJoueurQuiJoue ++;
     //         }
     //     }
