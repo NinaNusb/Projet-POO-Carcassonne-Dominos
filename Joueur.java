@@ -3,11 +3,11 @@ import java.util.Scanner;
 
 public class Joueur {
     // attributs
-    protected Tuile tuileEnMain;
-    protected String nom;
-    protected String type;
-    protected int nbPoints;
-    protected final Scanner sc = new Scanner(System.in);
+    private Tuile tuileEnMain;
+    private String nom;
+    private String type;
+    private int nbPoints;
+    private final Scanner sc = new Scanner(System.in);
 
     // constructeur
     public Joueur(String nom){
@@ -182,3 +182,4 @@ public class Joueur {
         }
     }
 }
+
