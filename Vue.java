@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Vue extends JFrame {
     Modele modele;
@@ -12,13 +13,15 @@ public class Vue extends JFrame {
     JPanel vuePlateau;
     JPanel panneauChoix;
     JPanel tuilePiochee;
-    public Vue(Controleur controleur, Modele modele, Plateau p) throws IOException {
+    ArrayList<ArrayList<JButton>> boutonPlateau;
+    public Vue(Controleur controleur, Modele modele, Jeu jeu) throws IOException {
         this.modele = modele;
         this.controleur = controleur;
         this.window = new JPanel();
         this.vuePlateau = new JPanel();
         this.panneauChoix = new JPanel();
-        File file = new File("C:/Users/carol/IdeaProjects/Carcassonne V2/src/Image tuile/Base_Game_C2_Tile_A1.jpg"); // TODO mettre une IOException
+        this.boutonPlateau = new ArrayList<>();
+        File file = ((TuileCarcassonne)jeu.getJoueurQuiJoue().getTuileEnMain()).getChemin();
         BufferedImage path = ImageIO.read(file);
         this.tuilePiochee = new ImagePane(path);
         this.modele.setTuilePiochee(this.tuilePiochee);
@@ -27,22 +30,27 @@ public class Vue extends JFrame {
         this.setSize(1200, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        this.vuePlateau.setLayout(new GridLayout(p.getPlateau().size(), p.getPlateau().get(0).size()));
+        this.vuePlateau.setLayout(new GridLayout(jeu.getP().getPlateau().size(), jeu.getP().getPlateau().get(0).size()));
         //this.vuePlateau.setPreferredSize(new Dimension(800, 800));
-        for(int i = 0; i < p.getPlateau().size(); i++){
-            for(int j = 0; j < p.getPlateau().get(0).size(); j++){
+        for(int i = 0; i < jeu.getP().getPlateau().size(); i++){
+            this.boutonPlateau.add(new ArrayList<>());
+            for(int j = 0; j < jeu.getP().getPlateau().get(0).size(); j++){
                 JButton btn = new JButton();
-                btn.setSize(new Dimension(Math.min(800/p.getPlateau().get(0).size(), 800/p.getPlateau().size()), Math.min(800/p.getPlateau().get(0).size(),800/p.getPlateau().size())));
+                btn.setSize(new Dimension(Math.min(800/jeu.getP().getPlateau().get(0).size(), 800/jeu.getP().getPlateau().size()), Math.min(800/jeu.getP().getPlateau().get(0).size(),800/jeu.getP().getPlateau().size())));
 
-                if(!p.getPlateau().get(i).get(j).estVide()){
-                    ImageIcon imageIcon = new ImageIcon(((TuileCarcassonne)p.getPlateau().get(i).get(j).getTuile()).getChemin().getAbsolutePath());
+                if(!jeu.getP().getPlateau().get(i).get(j).estVide()){
+                    ImageIcon imageIcon = new ImageIcon(((TuileCarcassonne)jeu.getP().getPlateau().get(i).get(j).getTuile()).getChemin().getAbsolutePath());
                     Image image = imageIcon.getImage();
                     Image newimg = image.getScaledInstance(btn.getWidth(), btn.getHeight(),  java.awt.Image.SCALE_SMOOTH);
                     imageIcon = new ImageIcon(newimg);
                     btn = new JButton(imageIcon);
                     btn.setSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
-
                 }
+                else {
+                    btn.setEnabled(jeu.getP().getMatriceAdjacence().get(i).get(j) != 0);
+                    //System.out.println(i + " " + j + " " + p.getMatriceAdjacence().get(i).get(j)); // TODO
+                }
+                this.boutonPlateau.get(i).add(btn);
                 this.vuePlateau.add(btn);
             }
         }
@@ -101,6 +109,22 @@ public class Vue extends JFrame {
             this.panneauChoix.add(this.tuilePiochee);
             controleur.tuileTournee(this.tuilePiochee);
         });
+
+        for (int i = 0 ; i < this.boutonPlateau.size() ; i++) {
+            for (int j = 0 ; j < this.boutonPlateau.get(0).size() ; j++) {
+                final int xi = i;
+                final int xj = j;
+                this.boutonPlateau.get(i).get(j).addActionListener(event -> {
+                    //btn.setEnabled(false);
+                    if (jeu.emplacementOuJouer(jeu.getP().getPlateau().get(xi).get(xj), false)) {
+                        System.out.println("ok"); // TODO
+                    }
+                    else {
+                        System.out.println("pas ok"); // TODO
+                    }
+                });
+            }
+        }
 
     }
     private BufferedImage createImage(JPanel panel) {
