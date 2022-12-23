@@ -1,13 +1,7 @@
-import java.util.LinkedList;
-
 public class Route extends Lieu{
-    LinkedList <Route> chemins = new LinkedList<Route>();
-    static int points; 
-    
 
-    public Route(Lieu[] lieux){
-        super(lieux);
-        Route.points = chemins.size(); 
+    public Route(){
+        this.points = 1;
     }
 
     public boolean estTerminee(){
