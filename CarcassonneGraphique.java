@@ -5,10 +5,10 @@ public class CarcassonneGraphique {
     private Modele modele;
     private Controleur controleur;
 
-    public CarcassonneGraphique(Plateau p) throws IOException {
+    public CarcassonneGraphique(Jeu jeu) throws IOException {
         this.modele = new Modele();
         this.controleur = new Controleur(modele);
-        vue = new Vue(controleur, modele, p);
+        vue = new Vue(controleur, modele, jeu);
         this.controleur.setVue(vue);
         vue.setVisible(true);
     }
