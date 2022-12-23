@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class JoueurCarcassonne extends Joueur{
     public int nbPartisans;
     TuileCarcassonne tuileEnMain;
@@ -7,7 +9,7 @@ public class JoueurCarcassonne extends Joueur{
         super(nom);
         this.nbPartisans = 7;
     }
-    
+
     public Tuile getTuileEnMain(){
         return this.tuileEnMain;
     }
@@ -21,6 +23,7 @@ public class JoueurCarcassonne extends Joueur{
             return false;
         }
         // Demande d'action quand le joueur a des partisans à disposition
+        Scanner sc = new Scanner(System.in);
         System.out.println("Souhaitez-vous placer un de vos partisans sur cette tuile? Entrez 'o' pour oui ou 'n' pour non. (format : o)");
         String rep = sc.nextLine();
         // Si le joueur souhaite placer un partisan sur la tuile jouée:
@@ -28,7 +31,7 @@ public class JoueurCarcassonne extends Joueur{
             // son nombre de partisans diminue de 1
             this.nbPartisans -= 1;
             // la tuile concernée reçoit un partisan (ainsi qu'une trace du joueur qui l'a placé, càd son indice)
-            ((TuileCarcassonne)t).ajouterPartisan(lieu, this);
+            lieu.ajouterPartisan(this); // TODO pas sûre que ça marche
             System.out.println("Nombre de partisan(s) restant(s): " + nbPartisans + "\n");
             return true;
         }
@@ -44,7 +47,7 @@ public class JoueurCarcassonne extends Joueur{
     //             nbPartisans += t.retirerPartisan(t.bas[1]);
     //             nbPartisans += t.retirerPartisan(t.gauche[1]);
     //         }
-            
+
     //     }
     // }
 }
