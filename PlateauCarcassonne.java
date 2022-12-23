@@ -1,7 +1,7 @@
 import java.io.File;
 
-public class PlateauCarcassonne extends Plateau{
-    
+public class PlateauCarcassonne extends Plateau {
+
     public PlateauCarcassonne(SacCarcassonne sac){
         super(sac);
         // on définit la tuile de départ qui est toujours la même
@@ -9,55 +9,62 @@ public class PlateauCarcassonne extends Plateau{
         Lieu[] droite = new Lieu[3];
         Lieu[] bas = new Lieu[3];
         Lieu[] gauche = new Lieu[3];
-        haut[0] = new Ville(haut); // TODO: est-ce que le lieu[] dans les parenthèses est correct?
-        haut[1] = new Ville(haut);
-        haut[2] = new Ville(haut);
-        droite[0] = new Champ(droite);
-        droite[1] = new Route(droite);
-        droite[2] = new Champ(droite);
-        bas[0] = new Champ(bas);
-        bas[1] = new Champ(bas);
-        bas[2] = new Champ(bas);
-        gauche[0] = new Champ(gauche);
-        gauche[1] = new Route(gauche);
-        gauche[2] = new Champ(gauche);
+        haut[0] = new Ville();
+        haut[1] = new Ville();
+        haut[2] = new Ville();
+        droite[0] = new Champ();
+        droite[1] = new Route();
+        droite[2] = new Champ();
+        bas[0] = new Champ();
+        bas[1] = new Champ();
+        bas[2] = new Champ();
+        gauche[0] = new Champ();
+        gauche[1] = new Route();
+        gauche[2] = new Champ();
         this.ajouterTuile(this.plateau.get(0).get(0), new TuileCarcassonne(haut, droite, bas, gauche, new File("C:/Users/carol/IdeaProjects/Carcassonne V2/src/Image tuile/Base_Game_C2_Tile_Z.jpg"), false));
-        
     }
 
-    @Override
-    public void ajouterTuile(Emplacement e, Tuile t){
-        super.ajouterTuile(e, t); // TODO: appel méthode Plateau et non PlateauCarcassonne
-        // Vérif si il y a une tuile adjacente en haut
+    public void ajouterTuile(Emplacement e, Tuile t, Joueur j){
+        super.ajouterTuile(e, t);
+        // Vérif s'il y a une tuile adjacente en haut
         if (!this.plateau.get(e.getX() +1).get(e.getY()).estVide()){
             // On copie le numéro
-            t.getHaut()[1].numeroUnique = this.plateau.get(e.getX() +1).get(e.getY()).getTuile().getBas()[1].numeroUnique;
+            ((Lieu)t.getBas()[1]).setNumeroUnique(((Lieu)this.plateau.get(e.getX() +1).get(e.getY()).getTuile().getBas()[1]).getNumeroUnique());
         } else {
-            t.getHaut()[1].numeroUnique = genID.getAndIncrement(); 
+            ((Lieu)t.getHaut()[1]).setNumeroUnique(Lieu.genID.getAndIncrement());
         }
-        // Vérif si il y a une tuile adjacente à droite
+        // Vérif s'il y a une tuile adjacente à droite
         if (!this.plateau.get(e.getX()).get(e.getY()+1).estVide()){
             // On copie le numéro
-            t.getDroite()[1].numeroUnique = this.plateau.get(e.getX()).get(e.getY()+1).getTuile().getGauche()[1].numeroUnique;
+            ((Lieu)t.getDroite()[1]).setNumeroUnique(((Lieu)this.plateau.get(e.getX()).get(e.getY()+1).getTuile().getGauche()[1]).getNumeroUnique());
         } else {
-            t.getDroite()[1].numeroUnique = genID.getAndIncrement(); 
+            ((Lieu)t.getDroite()[1]).setNumeroUnique(Lieu.genID.getAndIncrement());
         }
-        // Vérif si il y a une tuile adjacente en bas
+        // Vérif s'il y a une tuile adjacente en bas
         if (!this.plateau.get(e.getX() -1).get(e.getY()).estVide()){
             // On copie le numéro
-            t.getBas()[1].numeroUnique = this.plateau.get(e.getX() -1).get(e.getY()).getTuile().getHaut()[1].numeroUnique;
+            ((Lieu)t.getBas()[1]).setNumeroUnique(((Lieu)this.plateau.get(e.getX() -1).get(e.getY()).getTuile().getHaut()[1]).getNumeroUnique());
         } else {
-            t.getBas()[1].numeroUnique = genID.getAndIncrement(); 
+            ((Lieu)t.getBas()[1]).setNumeroUnique(Lieu.genID.getAndIncrement());
         }
-        // Vérif si il y a une tuile adjacente en haut à gauche
+        // Vérif s'il y a une tuile adjacente en haut à gauche
         if (!this.plateau.get(e.getX()).get(e.getY()-1).estVide()){
             // On copie le numéro
-            t.getGauche()[1].numeroUnique = this.plateau.get(e.getX()).get(e.getY()-1).getTuile().getDroite()[1].numeroUnique;
+            ((Lieu)t.getGauche()[1]).setNumeroUnique(((Lieu)this.plateau.get(e.getX()).get(e.getY()-1).getTuile().getDroite()[1]).getNumeroUnique());
         } else {
-            t.getGauche()[1].numeroUnique = genID.getAndIncrement(); 
+            ((Lieu)t.getGauche()[1]).setNumeroUnique(Lieu.genID.getAndIncrement());
         }
 
-        t.ajouterPartisan(lieu);
+        // on ne peut pas poser de partisan sur un champ, seulement sur une ville, une route ou une abbaye
+        ((Lieu)t.getHaut()[1]).ajouterPartisan(j);
+        if(!t.getDroite()[1].getClass().equals(t.getHaut()[1].getClass())){
+            ((Lieu)t.getDroite()[1]).ajouterPartisan(j);
+        }
+        if(!t.getBas()[1].getClass().equals(t.getDroite()[1].getClass()) && (!t.getBas()[1].getClass().equals(t.getHaut()[1].getClass()) || (t.getBas()[1].getClass().equals(t.getHaut()[1].getClass()) && t.getGauche()[1] instanceof Ville && t.getDroite()[1] instanceof Ville))){
+            ((Lieu)t.getBas()[1]).ajouterPartisan(j);
+        }
+        if(!t.getGauche()[1].getClass().equals(t.getHaut()[1].getClass()) && !t.getGauche()[1].getClass().equals(t.getBas()[1].getClass()) && (!t.getGauche()[1].getClass().equals(t.getDroite()[1].getClass()) || (t.getGauche()[1].getClass().equals(t.getDroite()[1].getClass()) && t.getHaut()[1] instanceof Ville && t.getBas()[1] instanceof Ville))){
+            ((Lieu)t.getGauche()[1]).ajouterPartisan(j);
+        }
     }
 }
-
