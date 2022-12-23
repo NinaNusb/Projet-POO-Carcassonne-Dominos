@@ -8,7 +8,7 @@ public class Jeu {
     // attributs
     private Scanner sc;
     private Joueur joueurQuiJoue;
-    private static Sac sac; // MODIF: sac static. Pertinent?
+    private Sac sac;
     private Plateau p;
     boolean jeuFini;
 
@@ -19,9 +19,15 @@ public class Jeu {
     public Plateau getP(){
         return this.p;
     }
+    public Joueur getJoueurQuiJoue(){
+        return this.joueurQuiJoue;
+    }
+    public void setJoueurQuiJoue(Joueur j){
+        this.joueurQuiJoue = j;
+    }
 
     // méthode qui fait jouer le joueur humain ou ordinateur
-    public void jouerTour(){
+    public void jouerTour(String typeJeu) throws IOException {
         // le joueur pioche une tuile au hasard
         this.joueurQuiJoue.pioche(sac);
         // affichage de la tuile et du plateau pour avoir un visuel
@@ -29,12 +35,17 @@ public class Jeu {
         System.out.println("Voici le plateau :");
         this.p.affiche();
 
-        // redirection de l'action suivant le type joueur
-        if (this.joueurQuiJoue.getType().equals("o")){
-            this.jouerIA();
+        if (typeJeu.equals("c")){ // TODO est-ce la bonne place ?
+            new CarcassonneGraphique(this);
+            this.jeuFini = true;
         }
         else {
-            this.jouerHumain();
+            // redirection de l'action suivant le type joueur
+            if (this.joueurQuiJoue.getType().equals("o")) {
+                this.jouerIA();
+            } else {
+                this.jouerHumain();
+            }
         }
     }
 
@@ -59,24 +70,27 @@ public class Jeu {
         String action = this.joueurQuiJoue.choixAction();
         switch (action) {
             // s'il veut abandonner la partie
-            case "a":
+            case "a" -> {
                 System.out.println(this.joueurQuiJoue.getNom() + " a abandonné.");
                 // on termine le jeu
                 this.jeuFini = true;
+            }
             // s'il veut défausser sa tuile
-            case "d":
+            case "d" -> {
                 System.out.println("Vous avez choisi de défausser votre tuile.\n");
                 // il la défausse
                 this.joueurQuiJoue.defausse();
+            }
             // s'il veut la tourner
-            case "t":
+            case "t" -> {
                 // on la tourne
                 this.joueurQuiJoue.getTuileEnMain().tourner();
                 System.out.println(this.joueurQuiJoue.getTuileEnMain());
                 // puis on recommence son tour de jeu avec la tuile tournée
                 this.jouerHumain();
+            }
             // s'il veut la placer
-            default:
+            default -> {
                 // on enregistre les coordonnées de l'emplacement sur lequel le joueur veut jouer
                 int[] coordonnees = this.joueurQuiJoue.choixEmplacement(p);
                 // tant qu'on ne peut pas jouer à cet emplacement
@@ -84,6 +98,7 @@ public class Jeu {
                     // on lui redemande de choisir
                     System.out.println("Votre tuile ne peut pas être placée là. Choisissez un autre emplacement.");
                     coordonnees = this.joueurQuiJoue.choixEmplacement(p);
+                }
             }
         }
     }
@@ -171,6 +186,7 @@ public class Jeu {
 
     // méthode pour vérifier (et jouer selon le booléen) si une tuile peut être jouée sur un emplacement libre
     public boolean emplacementOuJouer(Emplacement emplacementLibre, boolean jouer){
+
         // on copie la tuile car dans la suite de la méthode, la tuile va tourner. Il faut donc qu'elle ait la même
         // orientation à la sortie de la méthode
         Integer[] w = new Integer[3];
@@ -236,8 +252,8 @@ public class Jeu {
 
     // méthode qui vérifie si le jeu est terminé selon la condition que le sac est vide
     // (l'abandon d'un joueur est traité à un autre moment
-    public static boolean jeuFini(){
-        return sac.estVide();
+    public boolean jeuFini(){
+        return this.sac.estVide();
     }
 
     // on demande aux joueurs les informations qui servent à créer la Table, le Sac, le Plateau
@@ -327,13 +343,12 @@ public class Jeu {
 
         if (typeJeu.equals("c")){ // TODO Peut-être faire une fonction pour diminuer le main
             jeu.sac = new SacCarcassonne(); // TODO : bizarre de pas avoir de setter
-            jeu.p = new Plateau(jeu.sac); // TODO : bizarre de pas avoir de setter
+            jeu.p = new PlateauCarcassonne((SacCarcassonne) jeu.sac); // TODO : bizarre de pas avoir de setter
             System.out.println("Le jeu est Carcassonne et il y a " + jeu.sac.getLength() + " tuiles restantes dans le sac.\n");
-            new CarcassonneGraphique(jeu.p); // TODO
         }
         else {
             jeu.sac = new SacDomino(nbTuiles);
-            jeu.p = new Plateau(jeu.sac);
+            jeu.p = new PlateauDomino((SacDomino) jeu.sac);
 
             // récapitulatif des initialisations
             System.out.print("Voici la table de jeu :\n");
@@ -352,10 +367,13 @@ public class Jeu {
             if (numeroJoueurQuiJoue == -1) {
                 numeroJoueurQuiJoue = table.getNbJoueurs() - 1;
             }
-            jeu.joueurQuiJoue = table.getJoueurs().get(numeroJoueurQuiJoue);
+            jeu.setJoueurQuiJoue(table.getJoueurs().get(numeroJoueurQuiJoue));
+
             System.out.println("C'est à " + jeu.joueurQuiJoue.getNom() + " de jouer");
+
             // lancement du tour
-            jeu.jouerTour();
+            jeu.jouerTour(typeJeu);
+
             // si le joueur n'a pas abandonné (et donc que le jeu n'est pas terminé), on vérifie que le sac n'est pas vide
             if (!jeu.jeuFini) {
                 jeu.jeuFini = jeu.jeuFini();
