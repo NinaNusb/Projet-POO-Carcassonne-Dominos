@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Sac{
+public abstract class Sac{
     // attributs
     protected ArrayList<Tuile> sac;
     protected final Random rd = new Random();
