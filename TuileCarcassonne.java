@@ -3,10 +3,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TuileCarcassonne extends Tuile {
-    protected File chemin;
-    protected ArrayList<Lieu> partisansPoses;
-    protected ArrayList<Joueur> possesseursPartisans;
-    protected boolean blason;
+    private File chemin;
+    private ArrayList<Lieu> partisansPoses;
+    private ArrayList<Joueur> possesseursPartisans;
+    private boolean blason;
 
     @SuppressWarnings ("unchecked")
     public TuileCarcassonne(Lieu[] haut, Lieu[] droite, Lieu[] bas, Lieu[] gauche, File file, boolean blason){
@@ -28,22 +28,9 @@ public class TuileCarcassonne extends Tuile {
         return this.possesseursPartisans;
     }
 
-    public void ajouterPartisan(Lieu lieu, Joueur joueur){
-        partisansPoses.add(lieu);
-        possesseursPartisans.add(joueur);
-    }
-
-    public void retirerPartisan(Lieu lieu){
-        int i = this.partisansPoses.indexOf(lieu);
-        this.partisansPoses.remove(i);
-        ((JoueurCarcassonne)this.possesseursPartisans.get(i)).nbPartisans += 1;
-        this.possesseursPartisans.remove(i);
-
-    }
-
     public String cotesEgaux(Tuile t){return "";};
 
-    // public boolean estTerminee(){};
+    //public boolean estTerminee(){};
 
     //public int nbPartisanJoueurQuiJoue(int indiceJoueur){};
     public String toString(){ // TODO à enlever
@@ -55,5 +42,4 @@ public class TuileCarcassonne extends Tuile {
         System.out.print(" " + blason);
         return "";
     }
-
 }
