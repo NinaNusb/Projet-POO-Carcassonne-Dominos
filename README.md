@@ -10,7 +10,7 @@ Il s'agit d'un projet permettant de jouer à Dominos ou à Carcassonne.
 - Java
 
 ## Démarrage
-Lancez maintenant une partie en cliquant sur le lien suivant: 
+Lancez maintenant une partie en cliquant [ici].
 Exécuez le programme avec **VSCODE** ou **Eclipse**. Attention à bien respecter le format des réponses attendues qui sera toujours précisé.
 
 ### Pour jouer à dominos:
