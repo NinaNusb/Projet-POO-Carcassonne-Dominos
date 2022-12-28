@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,12 +10,15 @@ public class Jeu {
     private Scanner sc;
     private Joueur joueurQuiJoue;
     private Sac sac;
+    private Table table;
     private Plateau p;
-    boolean jeuFini;
+    private boolean jeuFini;
+    private int nbTour;
 
     // constructeur
     public Jeu(){
         this.sc = new Scanner(System.in);
+        this.nbTour = 0;
     }
     public Plateau getP(){
         return this.p;
@@ -22,8 +26,23 @@ public class Jeu {
     public Joueur getJoueurQuiJoue(){
         return this.joueurQuiJoue;
     }
+    public Sac getSac(){
+        return this.sac;
+    }
+    public Table getTable(){
+        return this.table;
+    }
+    public int getNbTour(){
+        return this.nbTour;
+    }
     public void setJoueurQuiJoue(Joueur j){
         this.joueurQuiJoue = j;
+    }
+    public void setTable(Table t){
+        this.table = t;
+    }
+    public void setNbTour(int x){
+        this.nbTour = x;
     }
 
     // méthode qui fait jouer le joueur humain ou ordinateur
@@ -187,19 +206,16 @@ public class Jeu {
     // méthode pour vérifier (et jouer selon le booléen) si une tuile peut être jouée sur un emplacement libre
     public boolean emplacementOuJouer(Emplacement emplacementLibre, boolean jouer){
 
-        // on copie la tuile car dans la suite de la méthode, la tuile va tourner. Il faut donc qu'elle ait la même
-        // orientation à la sortie de la méthode
-        Integer[] w = new Integer[3];
-        Tuile tuileBis = new TuileDomino(w,w,w,w); // TODO à voir si ça fonctionne
-        if(this.joueurQuiJoue.getTuileEnMain().getHaut() instanceof Integer[]) {
-            tuileBis = new TuileDomino((Integer[]) this.joueurQuiJoue.getTuileEnMain().getHaut(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getDroite(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getBas(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getGauche());
-        }
+        Tuile tuileBis = copieTuile(this.joueurQuiJoue.getTuileEnMain());
+
+        System.out.println("X : " + emplacementLibre.getX() + " Y : " + emplacementLibre.getY());
+
         // on tourne la tuile maximum quatre fois
         for (int i = 0; i < 4 ; i++) {
             // si une tuile est déjà présente en dessous de l'emplacement libre
             if (emplacementLibre.getX() + 1 < this.p.getPlateau().size() && !this.p.getPlateau().get(emplacementLibre.getX() + 1).get(emplacementLibre.getY()).estVide()) {
                 // mais que les deux tuiles n'ont pas ce côté commun égal
-                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX() + 1).get(emplacementLibre.getY()).getTuile()).equals("h")) {
+                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX() + 1).get(emplacementLibre.getY()).getTuile()).contains("h")) {
                     // on tourne la tuile et on continue de vérifier
                     this.joueurQuiJoue.getTuileEnMain().tourner();
                     continue;
@@ -208,7 +224,7 @@ public class Jeu {
             // si une tuile est déjà présente à droite de l'emplacement libre
             if (emplacementLibre.getY() + 1 < this.p.getPlateau().get(0).size() && !this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()+1).estVide()){
                 // mais que les deux tuiles n'ont pas ce côté commun égal
-                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()+1).getTuile()).equals("g")) {
+                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()+1).getTuile()).contains("g")) {
                     // on tourne la tuile et on continue de vérifier
                     this.joueurQuiJoue.getTuileEnMain().tourner();
                     continue;
@@ -217,7 +233,7 @@ public class Jeu {
             // si une tuile est déjà présente au dessus de l'emplacement libre
             if (emplacementLibre.getX() - 1 >= 0 && !this.p.getPlateau().get(emplacementLibre.getX()-1).get(emplacementLibre.getY()).estVide()){
                 // mais que les deux tuiles n'ont pas ce côté commun égal
-                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()-1).get(emplacementLibre.getY()).getTuile()).equals("b")) {
+                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()-1).get(emplacementLibre.getY()).getTuile()).contains("b")) {
                     // on tourne la tuile et on continue de vérifier
                     this.joueurQuiJoue.getTuileEnMain().tourner();
                     continue;
@@ -226,7 +242,7 @@ public class Jeu {
             // si une tuile est déjà présente à gauche de l'emplacement libre
             if (emplacementLibre.getY() - 1 >= 0 && !this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()-1).estVide()){
                 // mais que les deux tuiles n'ont pas ce côté commun égal
-                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()-1).getTuile()).equals("d")) {
+                if (!this.joueurQuiJoue.getTuileEnMain().cotesEgaux(this.p.getPlateau().get(emplacementLibre.getX()).get(emplacementLibre.getY()-1).getTuile()).contains("d")) {
                     // on tourne la tuile et on continue de vérifier
                     this.joueurQuiJoue.getTuileEnMain().tourner();
                     continue;
@@ -243,11 +259,33 @@ public class Jeu {
             // si on ne souhaite pas jouer la tuile
             else {
                 // on la remet dans l'orientation d'origine
-                this.joueurQuiJoue.setTuileEnMain(tuileBis);
+                if(this.joueurQuiJoue.getTuileEnMain() instanceof TuileDomino) {
+                    this.joueurQuiJoue.setTuileEnMain(tuileBis);
+                }
+                else if (this.joueurQuiJoue.getTuileEnMain() instanceof TuileCarcassonne){
+                    this.joueurQuiJoue.setTuileEnMain(new TuileCarcassonne((Lieu[])tuileBis.getHaut(), (Lieu[])tuileBis.getDroite(), (Lieu[])tuileBis.getBas(), (Lieu[])tuileBis.getGauche(), ((TuileCarcassonne) this.joueurQuiJoue.getTuileEnMain()).getChemin(), ((TuileCarcassonne)this.joueurQuiJoue.getTuileEnMain()).getBlason()));
+                }
             }
             return true;
         }
         return false;
+    }
+
+    private Tuile copieTuile(Tuile t){
+        // on copie la tuile car dans la suite de la méthode, la tuile va tourner. Il faut donc qu'elle ait la même
+        // orientation à la sortie de la méthode
+        if (this.joueurQuiJoue.getTuileEnMain() instanceof TuileDomino){
+            Integer[] w = new Integer[3];
+            TuileDomino tuileBis = new TuileDomino(w,w,w,w);
+            tuileBis = new TuileDomino((Integer[]) this.joueurQuiJoue.getTuileEnMain().getHaut(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getDroite(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getBas(), (Integer[]) this.joueurQuiJoue.getTuileEnMain().getGauche());
+            return tuileBis;
+        }
+        else {
+            Lieu[] w = new Lieu[3];
+            TuileCarcassonne tuileBis = new TuileCarcassonne(w,w,w,w, new File(""),false);
+            tuileBis = new TuileCarcassonne((Lieu[])this.joueurQuiJoue.getTuileEnMain().getHaut(), (Lieu[]) this.joueurQuiJoue.getTuileEnMain().getDroite(), (Lieu[]) this.joueurQuiJoue.getTuileEnMain().getBas(), (Lieu[]) this.joueurQuiJoue.getTuileEnMain().getGauche(), new File(""),false);
+            return tuileBis;
+        }
     }
 
     // méthode qui vérifie si le jeu est terminé selon la condition que le sac est vide
@@ -323,7 +361,24 @@ public class Jeu {
             System.out.println("Bravo à " + gagnant.getNom() + " !");
         }
     }
+    public void tourSuivant(int nbTour, Table table, String typeJeu) throws IOException {
+        // ce qui nous permet de savoir quel joueur est en train de jouer
+        int numeroJoueurQuiJoue = nbTour % table.getNbJoueurs() - 1;
+        if (numeroJoueurQuiJoue == -1) {
+            numeroJoueurQuiJoue = table.getNbJoueurs() - 1;
+        }
+        this.setJoueurQuiJoue(table.getJoueurs().get(numeroJoueurQuiJoue));
 
+        System.out.println("C'est à " + this.joueurQuiJoue.getNom() + " de jouer");
+
+        // lancement du tour
+        this.jouerTour(typeJeu);
+
+        // si le joueur n'a pas abandonné (et donc que le jeu n'est pas terminé), on vérifie que le sac n'est pas vide
+        if (!this.jeuFini) {
+            this.jeuFini = this.jeuFini();
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         // initialisation du jeu et de ses paramètres
@@ -338,11 +393,12 @@ public class Jeu {
         int nbJoueurs = jeu.demandeNombreJoueur();
         Table table = new Table(nbJoueurs);
         table.creationTable(nbJoueurs, jeu);
+        jeu.setTable(table);
 
         int nbTuiles = jeu.demandeNombreTuiles();
 
         if (typeJeu.equals("c")){ // TODO Peut-être faire une fonction pour diminuer le main
-            jeu.sac = new SacCarcassonne(); // TODO : bizarre de pas avoir de setter
+            jeu.sac = new SacCarcassonne(nbTuiles); // TODO : bizarre de pas avoir de setter
             jeu.p = new PlateauCarcassonne((SacCarcassonne) jeu.sac); // TODO : bizarre de pas avoir de setter
             System.out.println("Le jeu est Carcassonne et il y a " + jeu.sac.getLength() + " tuiles restantes dans le sac.\n");
         }
@@ -356,28 +412,12 @@ public class Jeu {
             System.out.println("Le jeu est Dominos et il y a " + (nbTuiles - 1) + " tuiles restantes dans le sac.\n");
         }
         // début du jeu
-        int nbTour = 0;
         jeu.jeuFini = false;
         // tant que le jeu n'est pas terminé
         while (!jeu.jeuFini) {
             // on incrémente le nombre de tours
-            nbTour++;
-            // ce qui nous permet de savoir quel joueur est en train de jouer
-            int numeroJoueurQuiJoue = nbTour % table.getNbJoueurs() - 1;
-            if (numeroJoueurQuiJoue == -1) {
-                numeroJoueurQuiJoue = table.getNbJoueurs() - 1;
-            }
-            jeu.setJoueurQuiJoue(table.getJoueurs().get(numeroJoueurQuiJoue));
-
-            System.out.println("C'est à " + jeu.joueurQuiJoue.getNom() + " de jouer");
-
-            // lancement du tour
-            jeu.jouerTour(typeJeu);
-
-            // si le joueur n'a pas abandonné (et donc que le jeu n'est pas terminé), on vérifie que le sac n'est pas vide
-            if (!jeu.jeuFini) {
-                jeu.jeuFini = jeu.jeuFini();
-            }
+            jeu.setNbTour(jeu.getNbTour() + 1);
+            jeu.tourSuivant(jeu.getNbTour(), table, typeJeu);
         }
         // une fois le jeu terminé, on affiche le plateau final
         jeu.p.affiche();
