@@ -24,9 +24,9 @@ public class PlateauCarcassonne extends Plateau {
         this.ajouterTuile(this.plateau.get(0).get(0), new TuileCarcassonne(haut, droite, bas, gauche, new File("C:/Users/carol/IdeaProjects/Carcassonne V2/src/Image tuile/Base_Game_C2_Tile_Z.jpg"), false));
     }
 
-    public void ajouterTuile(Emplacement e, Tuile t, Joueur j){
+    public void ajouterTuile(Emplacement e, TuileCarcassonne t, Joueur j){
         super.ajouterTuile(e, t);
-        // Vérif s'il y a une tuile adjacente en haut
+/*        // Vérif s'il y a une tuile adjacente en haut
         if (!this.plateau.get(e.getX() +1).get(e.getY()).estVide()){
             // On copie le numéro
             ((Lieu)t.getBas()[1]).setNumeroUnique(((Lieu)this.plateau.get(e.getX() +1).get(e.getY()).getTuile().getBas()[1]).getNumeroUnique());
@@ -66,5 +66,7 @@ public class PlateauCarcassonne extends Plateau {
         if(!t.getGauche()[1].getClass().equals(t.getHaut()[1].getClass()) && !t.getGauche()[1].getClass().equals(t.getBas()[1].getClass()) && (!t.getGauche()[1].getClass().equals(t.getDroite()[1].getClass()) || (t.getGauche()[1].getClass().equals(t.getDroite()[1].getClass()) && t.getHaut()[1] instanceof Ville && t.getBas()[1] instanceof Ville))){
             ((Lieu)t.getGauche()[1]).ajouterPartisan(j);
         }
+
+        */
     }
 }
