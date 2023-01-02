@@ -5,14 +5,25 @@ public class Table {
     private final ArrayList<Joueur> joueurs;
 
     // constructeur
-    public Table(int nbJoueurs){
+    public Table(int nbJoueurs, String typeJeu){
         this.joueurs = new ArrayList<>();
-        // pour chaque joueur
-        for (int i = 0 ; i < nbJoueurs ; i++){
-            // on l'ajoute à la liste de joueur avec un nom vide le temps que
-            // l'utilisateur donne un vrai nom
-            // type vide
-            this.joueurs.add(new Joueur(""));
+        if (typeJeu.equals("d")) {
+            // pour chaque joueur
+            for (int i = 0; i < nbJoueurs; i++) {
+                // on l'ajoute à la liste de joueur avec un nom vide le temps que
+                // l'utilisateur donne un vrai nom
+                // type vide
+                this.joueurs.add(new Joueur(""));
+            }
+        }
+        else if (typeJeu.equals("c")){
+            // pour chaque joueur
+            for (int i = 0; i < nbJoueurs; i++) {
+                // on l'ajoute à la liste de joueur avec un nom vide le temps que
+                // l'utilisateur donne un vrai nom
+                // type vide
+                this.joueurs.add(new JoueurCarcassonne(""));
+            }
         }
     }
 
@@ -25,16 +36,16 @@ public class Table {
     }
 
     // méthode pour initialiser une table de joueurs au début de la partie
-    public void creationTable(int nbJoueurs, Jeu jeu){
+    public void creationTable(int nbJoueurs, Parametres parametres){
         // pour chaque joueur
         for (int i = 0; i < nbJoueurs; i++){
             // on demande quel doit être son type (entre humain et ordinateur)
             System.out.print("Concernant le joueur numéro "+(i+1)+", ");
-            String adv = jeu.typeAdversaire();
+            String adv = parametres.typeAdversaire();
             // tant que la réponse n'est pas satisfaisante, on redemande
             while(!(adv.equals("o") || adv.equals("h"))){
                 System.out.print("Concernant le joueur numéro "+(i+1)+", ");
-                adv = jeu.typeAdversaire();
+                adv = parametres.typeAdversaire();
             }
             // si le joueur est un ordinateur
             if (adv.equals("o")){
@@ -45,7 +56,7 @@ public class Table {
             // si le joueur est un humain
             else {
                 // on lui demande son nom pour le donner au joueur
-                this.joueurs.get(i).setNom(jeu.demandeNomJoueur());
+                this.joueurs.get(i).setNom(parametres.demandeNomJoueur());
                 this.joueurs.get(i).setType("h");
             }
         }

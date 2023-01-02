@@ -1,8 +1,8 @@
 import java.io.IOException;
 
-public class CarcassonneGraphique {
+public class DominoGraphique {
 
-    public CarcassonneGraphique(Jeu jeu) throws IOException {
+    public DominoGraphique(Jeu jeu) throws IOException {
         Modele modele = new Modele();
         Controleur controleur = new Controleur(modele);
         Vue vue = new Vue(controleur, modele, jeu);

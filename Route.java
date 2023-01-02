@@ -1,5 +1,6 @@
 public class Route extends Lieu{
 
+    // constructeur
     public Route(){
         this.points = 1;
     }

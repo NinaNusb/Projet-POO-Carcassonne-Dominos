@@ -15,7 +15,7 @@ public class Joueur {
         this.nbPoints = 0;
     }
 
-    // tous les getteurs nécessaires
+    // tous les getters nécessaires
     public Tuile getTuileEnMain(){
         return this.tuileEnMain;
     }
@@ -28,7 +28,7 @@ public class Joueur {
     public int getNbPoints(){
         return this.nbPoints;
     }
-    // tous les setteurs nécessaires
+    // tous les setters nécessaires
     public void setTuileEnMain(Tuile tuile){
         this.tuileEnMain = tuile;
     }

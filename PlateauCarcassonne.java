@@ -2,6 +2,7 @@ import java.io.File;
 
 public class PlateauCarcassonne extends Plateau {
 
+    // constructeur
     public PlateauCarcassonne(SacCarcassonne sac){
         super(sac);
         // on définit la tuile de départ qui est toujours la même

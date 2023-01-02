@@ -4,10 +4,12 @@ import javax.swing.JPanel;
 
 public class ImagePane extends JPanel {
 
-    private static final long serialVersionUID = 1L;
+    // attributs
 
+    private static final long serialVersionUID = 1L;
     protected Image buffer;
 
+    // constructeur
     public ImagePane(Image buffer){
         this.buffer = buffer;
     }

@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class SacDomino extends Sac {
 
+    // constructeur
     public SacDomino(int nbTuiles){
-        ArrayList<Tuile> wipSac = new ArrayList<>();
+        ArrayList<Tuile> sac = new ArrayList<>();
         // pour chaque tuile à mettre dans le sac
         for (int i = 0; i < nbTuiles; i++){
             // on remplit les attributs haut, droite, bas et gauche avec des nombres
@@ -32,8 +33,8 @@ public class SacDomino extends Sac {
             // une fois tous les attributs construits, on crée la tuile
             TuileDomino tuile = new TuileDomino(haut,droite,bas,gauche);
             // on ajoute cette tuile au sac en construction
-            wipSac.add(tuile);
+            sac.add(tuile);
         }
-        sac = wipSac;
+        this.sac = sac;
     }
 }

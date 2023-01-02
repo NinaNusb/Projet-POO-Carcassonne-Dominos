@@ -1,5 +1,8 @@
+import java.util.ArrayList;
+
 public class TuileDomino extends Tuile {
 
+    // constructeur
     @SuppressWarnings ("unchecked")
     public TuileDomino(Integer[] haut, Integer[] droite, Integer[] bas, Integer[] gauche){
         super(haut, droite, bas, gauche);
@@ -7,7 +10,8 @@ public class TuileDomino extends Tuile {
 
     // méthode qui renvoie le nom (haut/droite/bas/gauche) d'un des côtés égaux entre la tuileEnMain et une
     // tuile déjà posée s'il y en a
-    public String cotesEgaux(Tuile t){
+    public ArrayList cotesEgaux(Tuile t){
+        ArrayList<String> possibilites = new ArrayList<>();
         boolean tripletEgal = true;
         // pour chaque int dans le tableau de valeur
         for (int i = 0; i < 3 ; i ++){
@@ -19,7 +23,9 @@ public class TuileDomino extends Tuile {
             }
         }
         // on retourne le lieu où on peut poser la tuile
-        if (tripletEgal) return "b";
+        if (tripletEgal){
+            possibilites.add("b");
+        }
 
         tripletEgal = true;
         // pour chaque int dans le tableau de valeur
@@ -32,7 +38,9 @@ public class TuileDomino extends Tuile {
             }
         }
         // on retourne le lieu où on peut poser la tuile
-        if (tripletEgal) return "g";
+        if (tripletEgal) {
+            possibilites.add("g");
+        }
 
         tripletEgal = true;
         // pour chaque int dans le tableau de valeur
@@ -45,7 +53,9 @@ public class TuileDomino extends Tuile {
             }
         }
         // on retourne le lieu où on peut poser la tuile
-        if (tripletEgal) return "h";
+        if (tripletEgal) {
+            possibilites.add("h");
+        }
 
         tripletEgal = true;
         // pour chaque int dans le tableau de valeur
@@ -59,11 +69,11 @@ public class TuileDomino extends Tuile {
         }
         // on retourne le lieu où on peut poser la tuile
         if (tripletEgal){
-            return "d";
+            possibilites.add("d");
         }
 
         // si aucun des côtés de la TuileEnMain n'est égal avec la tuile déjà posée, on retourne un string vide
-        return "";
+        return possibilites;
     }
 
     public String toString(){

@@ -1,5 +1,6 @@
 public class Ville extends Lieu{
 
+    // constructeur
     public Ville(){
         this.points = 2;
         // TODO il va falloir traiter les blasons

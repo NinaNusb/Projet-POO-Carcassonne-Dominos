@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public abstract class Tuile<T> {
     // attributs
     protected T[] haut;
@@ -40,6 +43,6 @@ public abstract class Tuile<T> {
 
     // méthode qui renvoie le nom (haut/droite/bas/gauche) d'un des côtés égaux entre la tuileEnMain et une
     // tuile déjà posée s'il y en a
-    public abstract String cotesEgaux(Tuile t);
+    public abstract ArrayList cotesEgaux(Tuile t);
 
 }

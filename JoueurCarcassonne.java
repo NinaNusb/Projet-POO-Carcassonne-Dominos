@@ -1,17 +1,17 @@
 import java.util.Scanner;
 
-public class JoueurCarcassonne extends Joueur{
+public class JoueurCarcassonne extends Joueur {
+    // attributs
     public int nbPartisans;
-    TuileCarcassonne tuileEnMain;
-    int joueurQuiJoue; //TODO: pertinent ici?
 
+    // constructeur
     public JoueurCarcassonne(String nom){
         super(nom);
         this.nbPartisans = 7;
     }
-
-    public Tuile getTuileEnMain(){
-        return this.tuileEnMain;
+    // getters nécessaires
+    public int getNbPartisans(){
+        return this.nbPartisans;
     }
 
     public boolean placePartisan(TuileCarcassonne t, Lieu lieu){
