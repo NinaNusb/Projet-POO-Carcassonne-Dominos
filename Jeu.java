@@ -98,29 +98,29 @@ public class Jeu {
         }
         // on demande quelle action il veut faire
         String action = this.joueurQuiJoue.choixAction();
-        switch (action) {
+        switch (action){
             // s'il veut abandonner la partie
-            case "a" -> {
+            case "a":
                 System.out.println(this.joueurQuiJoue.getNom() + " a abandonné.");
                 // on termine le jeu
                 this.jeuFini = true;
-            }
+    
             // s'il veut défausser sa tuile
-            case "d" -> {
+            case "d" :
                 System.out.println("Vous avez choisi de défausser votre tuile.\n");
                 // il la défausse
                 this.joueurQuiJoue.defausse();
-            }
+            
             // s'il veut la tourner
-            case "t" -> {
+            case "t":
                 // on la tourne
                 this.joueurQuiJoue.getTuileEnMain().tourner();
                 System.out.println(this.joueurQuiJoue.getTuileEnMain());
                 // puis on recommence son tour de jeu avec la tuile tournée
                 this.jouerHumain();
-            }
+            
             // s'il veut la placer
-            default -> {
+            default:
                 // on enregistre les coordonnées de l'emplacement sur lequel le joueur veut jouer
                 int[] coordonnees = this.joueurQuiJoue.choixEmplacement(p);
                 // tant qu'on ne peut pas jouer à cet emplacement
@@ -129,8 +129,8 @@ public class Jeu {
                     System.out.println("Votre tuile ne peut pas être placée là. Choisissez un autre emplacement.");
                     coordonnees = this.joueurQuiJoue.choixEmplacement(p);
                 }
-            }
         }
+    
     }
 
     private int pointsPotentiels(Emplacement e){
