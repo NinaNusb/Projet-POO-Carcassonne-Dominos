@@ -15,8 +15,13 @@ public class SacCarcassonne extends Sac {
 
             // construction de la liste ordonnée de tous les fichiers images des tuiles
             ArrayList<File> listeImages = new ArrayList<>();
-            Collections.addAll(listeImages, new File("src/Image tuile").listFiles());
-
+                            
+            try {
+                // new File("src/Image tuile").listFiles();
+                Collections.addAll(listeImages, new File("Image tuile").listFiles()); //src/
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             // on génère autant de nombres aléatoires (différents les uns des autres)
             // que de tuiles souhaitées pour le jeu
             ArrayList<Integer> nbAlea = new ArrayList<>();
