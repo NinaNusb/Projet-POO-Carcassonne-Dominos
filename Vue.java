@@ -151,7 +151,7 @@ public class Vue extends JFrame {
         ligne1.setHorizontalAlignment(JLabel.CENTER);
         this.panneauChoix.add(ligne1);
         // affichage du bouton pour tourner la tuile
-        JButton tournerButton = new JButton("Tourner la tuile");
+        JButton tournerButton = new JButton("Tourner la tuile ");
         this.panneauChoix.add(tournerButton);
         // affichage du bouton pour défausser la tuile
         JButton defausserButton = new JButton("Défausser la tuile");
@@ -159,12 +159,14 @@ public class Vue extends JFrame {
         // affichage du bouton pour abandonner la partie
         JButton abandonnerButton = new JButton("Abandonne la partie");
         this.panneauChoix.add(abandonnerButton);
+        
+        
         // affichage de la tuile piochée
         this.tuilePiochee.setPreferredSize(new Dimension(110,110));
         JPanel tuilePiochee = new ImagePane(path); // TODO ligne utile ?
         tuilePiochee.setPreferredSize(new Dimension(110,110)); // TODO ligne utile ?
         this.panneauChoix.add(this.tuilePiochee);
-
+        
         // ajout de tous les composants à la fenêtre
         this.window.setLayout(new BoxLayout(this.window, BoxLayout.LINE_AXIS));
         this.window.add(panneauChoix);
@@ -221,6 +223,7 @@ public class Vue extends JFrame {
             this.panneauChoix.add(this.tuilePiochee);
             controleur.tuileTournee(this.tuilePiochee);
         });
+        
 
         // pour chaque tuile du plateau
         for (int i = 0 ; i < this.boutonPlateau.size() ; i++) {
@@ -331,7 +334,7 @@ public class Vue extends JFrame {
 
                     if (!jeu.getP().getPlateau().get(i).get(j).estVide()) {
                         if(jeu.getParametres().getTypeDeJeu().equals("c")) {
-                            ImageIcon imageIcon = new ImageIcon(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getChemin().getAbsolutePath());
+                            ImageIcon imageIcon = new ImageIcon(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getChemin().getAbsolutePath()); // change image
                             Image image = imageIcon.getImage();
                             Image newimg = image.getScaledInstance(btn.getWidth(), btn.getHeight(), java.awt.Image.SCALE_SMOOTH);
                             imageIcon = new ImageIcon(newimg);
@@ -341,7 +344,10 @@ public class Vue extends JFrame {
                                 r1 = new RotatedIcon(r1, RotatedIcon.Rotate.DOWN);
                             }
                             btn = new JButton(r1);
+                            
                             btn.setSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
+
+        
                         }
                         else {
                             // TODO
@@ -378,8 +384,47 @@ public class Vue extends JFrame {
                             for (int n = -1; n < ((TuileCarcassonne) (TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getNbPivot(); n++) {
                                 r1 = new RotatedIcon(r1, RotatedIcon.Rotate.DOWN);
                             }
-                            btn = new JButton(r1);
+                            btn = new JButton(r1); 
                             btn.setSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
+
+                            // sauvegarde tuile posée
+                            ((JoueurCarcassonne)jeu.getJoueurQuiJoue()).setTuile(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()));
+
+                            // Affichage partisans avec le nom du joueur
+                            JLabel partisanH = new JLabel("H"); 
+                            JLabel partisanD = new JLabel("D"); 
+                            JLabel partisanG = new JLabel("G"); 
+                            JLabel partisanB = new JLabel("B"); 
+                            // changer couleur de chaque lettre en fonction du joueur qui a posé le partisan
+                            // récupérer liste des lieux de la tuile
+                            ArrayList<Lieu> listPartisans = ((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPartisansPoses(); //tuile pas
+                            // ArrayList<Lieu> listPartisans = new ArrayList<>();
+                            // listPartisans.add(new Ville());
+                            // System.out.println("****" +listPartisans.size());
+                            int k = 0;
+                            for (Lieu l : listPartisans){
+                                //System.out.println("####" + l.getPosition());
+                                Joueur possesseursPartisans = ((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPossesseursPartisans().get(k);
+                                // récupérer nom lieu et changer couleurs en fonction du nom du joueur et nom du lieu
+                                if (l.getPosition().equals("H")){
+                                    partisanH.setForeground(Color.BLUE);
+                                }
+                                else if (l.getPosition().equals("D")){
+                                    partisanH.setForeground(Color.GREEN);
+                                }
+                                else if (l.getPosition().equals("B")){
+                                    partisanH.setForeground(Color.WHITE);
+                                }
+                                else if (l.getPosition().equals("G")){
+                                    partisanH.setForeground(Color.ORANGE);
+                                }
+                                
+                                k ++;
+                            }
+                            btn.add(partisanH);
+                            btn.add(partisanG);
+                            btn.add(partisanD);
+                            btn.add(partisanB);
                         }
                         else {
                             // TODO
@@ -489,6 +534,15 @@ public class Vue extends JFrame {
             this.panneauChoix.add(defausserButton);
             JButton abandonnerButton = new JButton("Abandonne la partie");
             this.panneauChoix.add(abandonnerButton);
+            // affichage bouttons partisans
+            JButton btnPartisanHaut = new JButton("Partisan haut");
+            this.panneauChoix.add(btnPartisanHaut);
+            JButton btnPartisanBas = new JButton("Partisan bas");
+            this.panneauChoix.add(btnPartisanBas);
+            JButton btnPartisanDroite = new JButton("Partisan droite");
+            this.panneauChoix.add(btnPartisanDroite);
+            JButton btnPartisanGauche = new JButton("Partisan gauche");
+            this.panneauChoix.add(btnPartisanGauche);
             this.tuilePiochee.setPreferredSize(new Dimension(110, 110));
             this.panneauChoix.add(this.tuilePiochee);
             this.window.add(panneauChoix);
@@ -547,9 +601,83 @@ public class Vue extends JFrame {
                         g2.drawImage(bi, 0, 0, null);
                     }
                 };
+                
                 jeu.getJoueurQuiJoue().getTuileEnMain().tourner();
                 this.panneauChoix.add(this.tuilePiochee);
                 controleur.tuileTournee(this.tuilePiochee);
+            });
+            // bouttons partisans
+            btnPartisanHaut.addActionListener(event -> {
+                try {
+                    // récupérer joueur qui joue
+                    JoueurCarcassonne j = (JoueurCarcassonne)jeu.getJoueurQuiJoue();
+                    // récupérer dernière tuile posée du joueur
+                    TuileCarcassonne t = (TuileCarcassonne)j.getTuile();
+                    // ajouter lieu à la liste des partisans du joueurs
+                    Lieu lieuHaut = (Lieu)t.getHaut()[0];
+                    lieuHaut.setPosition("H");
+                    // place partisan
+                    j.placePartisan(t, lieuHaut);
+                    this.miseAJourPlateau(jeu);
+                    pack();
+                    setVisible(true);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            btnPartisanBas.addActionListener(event -> {
+                try {
+                    // récupérer joueur qui joue
+                    JoueurCarcassonne j = (JoueurCarcassonne)jeu.getJoueurQuiJoue();
+                    // récupérer dernière tuile posée du joueur
+                    TuileCarcassonne t = (TuileCarcassonne)j.getTuile();
+                    // ajouter lieu à la liste des partisans du joueurs
+                    Lieu lieuBas = (Lieu)t.getBas()[0];
+                    lieuBas.setPosition("B");
+                    // place partisan
+                    j.placePartisan(t, lieuBas);
+                    this.miseAJourPlateau(jeu);
+                    pack();
+                    setVisible(true);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            btnPartisanDroite.addActionListener(event -> {
+                try {
+                    // récupérer joueur qui joue
+                    JoueurCarcassonne j = (JoueurCarcassonne)jeu.getJoueurQuiJoue();
+                    // récupérer dernière tuile posée du joueur
+                    TuileCarcassonne t = (TuileCarcassonne)j.getTuile();
+                    // ajouter lieu à la liste des partisans du joueurs
+                    Lieu lieuDroite = (Lieu)t.getDroite()[0];
+                    lieuDroite.setPosition("D");
+                    // place partisan
+                    j.placePartisan(t, lieuDroite);
+                    this.miseAJourPlateau(jeu);
+                    pack();
+                    setVisible(true);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            btnPartisanGauche.addActionListener(event -> {
+                try {
+                    // récupérer joueur qui joue
+                    JoueurCarcassonne j = (JoueurCarcassonne)jeu.getJoueurQuiJoue();
+                    // récupérer dernière tuile posée du joueur
+                    TuileCarcassonne t = (TuileCarcassonne)j.getTuile();
+                    // ajouter lieu à la liste des partisans du joueurs
+                    Lieu lieuGauche = (Lieu)t.getGauche()[0];
+                    lieuGauche.setPosition("G");
+                    // place partisan
+                    j.placePartisan(t, lieuGauche);
+                    this.miseAJourPlateau(jeu);
+                    pack();
+                    setVisible(true);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
     }
 
