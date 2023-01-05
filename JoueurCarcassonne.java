@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class JoueurCarcassonne extends Joueur {
     // attributs
     public int nbPartisans;
+    private Tuile tuilePosee;
 
     // constructeur
     public JoueurCarcassonne(String nom){
@@ -12,6 +13,14 @@ public class JoueurCarcassonne extends Joueur {
     // getters nécessaires
     public int getNbPartisans(){
         return this.nbPartisans;
+    }
+
+    public Tuile getTuile(){
+        return this.tuilePosee;
+    }
+
+    public void setTuile(Tuile t){
+        this.tuilePosee = t;
     }
 
     public boolean placePartisan(TuileCarcassonne t, Lieu lieu){
@@ -33,6 +42,10 @@ public class JoueurCarcassonne extends Joueur {
             // la tuile concernée reçoit un partisan (ainsi qu'une trace du joueur qui l'a placé, càd son indice)
             lieu.ajouterPartisan(this); // TODO pas sûre que ça marche
             System.out.println("Nombre de partisan(s) restant(s): " + nbPartisans + "\n");
+            // ajoute joueur à liste des possesseurs
+            t.getPossesseursPartisans().add(this);
+            // ajoute lieu à liste des lieux qui ont un partisan
+            t.getPartisansPoses().add(lieu);
             return true;
         }
         return false;
