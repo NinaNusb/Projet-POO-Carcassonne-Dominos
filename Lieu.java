@@ -8,6 +8,7 @@ public abstract class Lieu {
     private Joueur possesseurPartisan;
     private int numeroUnique;
     public static AtomicInteger genID = new AtomicInteger();
+    private String position;
 
     // constructeur
     public Lieu(){}
@@ -17,10 +18,15 @@ public abstract class Lieu {
     public int getNumeroUnique(){
         return this.numeroUnique;
     }
+    public String getPosition(){
+        return this.position;
+    }
     public void setNumeroUnique(int x){
         this.numeroUnique = x;
     }
-
+    public void setPosition(String p){
+        this.position = p;
+    }
     public void donneIndice(Lieu lieuAdjacent){
         this.numeroUnique = lieuAdjacent.numeroUnique;
     }
