@@ -3,27 +3,17 @@ import java.util.ArrayList;
 public class Table {
     // attributs
     private final ArrayList<Joueur> joueurs;
-    private final ArrayList<String> couleurs;
 
     // constructeur
     public Table(int nbJoueurs, String typeJeu){
         this.joueurs = new ArrayList<>();
-        this.couleurs = new ArrayList<>();
-        // couleurs possibles pour les joueurs
-        this.couleurs.add("red"); 
-        this.couleurs.add("blue");
-        this.couleurs.add("green");
-        this.couleurs.add("yellow");
-        this.couleurs.add("pink");        
         if (typeJeu.equals("d")) {
             // pour chaque joueur
             for (int i = 0; i < nbJoueurs; i++) {
                 // on l'ajoute à la liste de joueur avec un nom vide le temps que
                 // l'utilisateur donne un vrai nom
                 // type vide
-                JoueurCarcassonne joueur = new JoueurCarcassonne("");
-                joueur.setCouleur(this.couleurs.get(i));
-                this.joueurs.add(joueur);
+                this.joueurs.add(new Joueur(""));
             }
         }
         else if (typeJeu.equals("c")){
@@ -32,9 +22,25 @@ public class Table {
                 // on l'ajoute à la liste de joueur avec un nom vide le temps que
                 // l'utilisateur donne un vrai nom
                 // type vide
-                JoueurCarcassonne joueur = new JoueurCarcassonne("");
-                joueur.setCouleur(this.couleurs.get(i));
-                this.joueurs.add(joueur);
+                this.joueurs.add(new JoueurCarcassonne(""));
+                if(i==0) {
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#000");
+                }
+                if(i==1){
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#ff0000");
+                }
+                if(i==2){
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#ffff00");
+                }
+                if(i==3){
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#00ff00");
+                }
+                if(i==4){
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#0000ff");
+                }
+                if(i==5){
+                    ((JoueurCarcassonne) (this.joueurs.get(i))).setCouleur("#ff00ff");
+                }
             }
         }
     }

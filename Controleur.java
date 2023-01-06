@@ -33,13 +33,6 @@ public class Controleur {
 
     // méthode pour piocher une tuile
     public void pioche(Jeu jeu) throws IOException {
-        // on détermine le joueur qui doit jouer le nouveau tour
-        jeu.setNbTour(jeu.getNbTour()+1);
-        int numeroJoueurQuiJoue = jeu.getNbTour() % jeu.getParametres().getTable().getNbJoueurs() - 1;
-        if (numeroJoueurQuiJoue == -1) {
-            numeroJoueurQuiJoue = jeu.getParametres().getTable().getNbJoueurs() - 1;
-        }
-        jeu.setJoueurQuiJoue(jeu.getParametres().getTable().getJoueurs().get(numeroJoueurQuiJoue));
 
         // ce joueur pioche une tuile
         jeu.getJoueurQuiJoue().pioche(jeu.getSac());
@@ -50,5 +43,16 @@ public class Controleur {
         vue.tuilePiochee = new ImagePane(path);
         this.modele.setTuilePiochee(vue.tuilePiochee);
         vue.miseAJourPanneauChoix(jeu);
+    }
+
+    public void tourSuivant(Jeu jeu) throws IOException {
+        jeu.setNbTour(jeu.getNbTour()+1);
+        int numeroJoueurQuiJoue = jeu.getNbTour() % jeu.getParametres().getTable().getNbJoueurs() - 1;
+        if (numeroJoueurQuiJoue == -1) {
+            numeroJoueurQuiJoue = jeu.getParametres().getTable().getNbJoueurs() - 1;
+        }
+        jeu.setJoueurQuiJoue(jeu.getParametres().getTable().getJoueurs().get(numeroJoueurQuiJoue));
+
+        this.pioche(jeu);
     }
 }

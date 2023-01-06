@@ -98,37 +98,36 @@ public class Jeu {
         }
         // on demande quelle action il veut faire
         String action = this.joueurQuiJoue.choixAction();
-        switch (action){
-            // s'il veut abandonner la partie
-            case "a":
-                System.out.println(this.joueurQuiJoue.getNom() + " a abandonné.");
-                // on termine le jeu
-                this.jeuFini = true;
-    
-            // s'il veut défausser sa tuile
-            case "d" :
-                System.out.println("Vous avez choisi de défausser votre tuile.\n");
-                // il la défausse
-                this.joueurQuiJoue.defausse();
-            
-            // s'il veut la tourner
-            case "t":
-                // on la tourne
-                this.joueurQuiJoue.getTuileEnMain().tourner();
-                System.out.println(this.joueurQuiJoue.getTuileEnMain());
-                // puis on recommence son tour de jeu avec la tuile tournée
-                this.jouerHumain();
-            
-            // s'il veut la placer
-            default:
-                // on enregistre les coordonnées de l'emplacement sur lequel le joueur veut jouer
-                int[] coordonnees = this.joueurQuiJoue.choixEmplacement(p);
-                // tant qu'on ne peut pas jouer à cet emplacement
-                while (!emplacementOuJouer(new Emplacement(coordonnees[0], coordonnees[1]), true)) {
-                    // on lui redemande de choisir
-                    System.out.println("Votre tuile ne peut pas être placée là. Choisissez un autre emplacement.");
-                    coordonnees = this.joueurQuiJoue.choixEmplacement(p);
-                }
+        // s'il veut abandonner la partie
+        if (action.equals("a")) {
+            System.out.println(this.joueurQuiJoue.getNom() + " a abandonné.");
+            // on termine le jeu
+            this.jeuFini = true;
+        }
+        // s'il veut défausser sa tuile
+        if (action.equals("d")) {
+            System.out.println("Vous avez choisi de défausser votre tuile.\n");
+            // il la défausse
+            this.joueurQuiJoue.defausse();
+        }
+        // s'il veut la tourner
+        if (action.equals("t")) {
+            // on la tourne
+            this.joueurQuiJoue.getTuileEnMain().tourner();
+            System.out.println(this.joueurQuiJoue.getTuileEnMain());
+            // puis on recommence son tour de jeu avec la tuile tournée
+            this.jouerHumain();
+        }
+        // s'il veut la placer
+        if(action.equals("p")) {
+            // on enregistre les coordonnées de l'emplacement sur lequel le joueur veut jouer
+            int[] coordonnees = this.joueurQuiJoue.choixEmplacement(p);
+            // tant qu'on ne peut pas jouer à cet emplacement
+            while (!emplacementOuJouer(new Emplacement(coordonnees[0], coordonnees[1]), true)) {
+                // on lui redemande de choisir
+                System.out.println("Votre tuile ne peut pas être placée là. Choisissez un autre emplacement.");
+                coordonnees = this.joueurQuiJoue.choixEmplacement(p);
+            }
         }
     
     }
@@ -241,11 +240,9 @@ public class Jeu {
     public boolean emplacementOuJouer(Emplacement emplacementLibre, boolean jouer){
 
         Tuile tuileBis = copieTuile(this.joueurQuiJoue.getTuileEnMain());
-        int j = 0;
 
         // on tourne la tuile maximum quatre fois
         for (int i = 0; i < 4 ; i++) {
-            j = i;
             // si une tuile est déjà présente en dessous de l'emplacement libre
             if (emplacementLibre.getX() + 1 < this.p.getPlateau().size() && !this.p.getPlateau().get(emplacementLibre.getX() + 1).get(emplacementLibre.getY()).estVide()) {
                 // mais que les deux tuiles n'ont pas ce côté commun égal
@@ -285,20 +282,17 @@ public class Jeu {
             // si le jeu est Carcassonne
             if(this.getParametres().getTypeDeJeu().equals("c")){
                 // on sauvegarde le nombre de pivots
-                ((TuileCarcassonne)this.joueurQuiJoue.getTuileEnMain()).setNbPivot(j);
+                ((TuileCarcassonne)this.joueurQuiJoue.getTuileEnMain()).setNbPivot(i);
             }
 
             // si on souhaite jouer la tuile
             if (jouer) {
-                if (this.joueurQuiJoue.getType().equals("o")){
-                    // on l'ajoute au plateau
-                    this.p.ajouterTuile(emplacementLibre, this.joueurQuiJoue.getTuileEnMain());
-                    this.joueurQuiJoue.setTuileEnMain(null);
-                    // on compte les points ainsi gagnés si on joue à dominos
-                    if(this.getParametres().getTypeDeJeu().equals("d")) {
-                    this.joueurQuiJoue.gagnePoints(emplacementLibre, this.p);  
-                }
-              
+                // on l'ajoute au plateau
+                this.p.ajouterTuile(emplacementLibre, this.joueurQuiJoue.getTuileEnMain());
+                this.joueurQuiJoue.setTuileEnMain(null);
+                // on compte les points ainsi gagnés si on joue à dominos
+                if(this.getParametres().getTypeDeJeu().equals("d")) {
+                    this.joueurQuiJoue.gagnePoints(emplacementLibre, this.p);
                 }
             }
             // si on ne souhaite pas jouer la tuile
@@ -393,16 +387,18 @@ public class Jeu {
     }
 
     public void jouerPartie() throws IOException {
+        // si on joue à Carcassonne
         if (parametres.getTypeDeJeu().equals("c")){
-            this.sac = new SacCarcassonne(parametres.getNbTuiles()); // TODO : bizarre de pas avoir de setter
-            this.p = new PlateauCarcassonne((SacCarcassonne) this.sac); // TODO : bizarre de pas avoir de setter
-            System.out.println("Le jeu est Carcassonne et il y a " + (parametres.getNbTuiles() - 1) + " tuiles restantes dans le sac.\n");
+            // création du sac et du plateau
+            this.sac = new SacCarcassonne(parametres.getNbTuiles());
+            this.p = new PlateauCarcassonne();
         }
         else {
+            // création du sac et du plateau
             this.sac = new SacDomino(parametres.getNbTuiles());
             this.p = new PlateauDomino((SacDomino) this.sac);
 
-            // récapitulatif des initialisations TODO : mettre la même chose pour carcassonne
+            // récapitulatif des initialisations
             System.out.print("Voici la table de jeu :\n");
             System.out.print(parametres.getTable());
             System.out.println("Le jeu est Dominos et il y a " + (parametres.getNbTuiles() - 1) + " tuiles restantes dans le sac.\n");

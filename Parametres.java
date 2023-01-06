@@ -39,7 +39,7 @@ public class Parametres {
 
     // on demande aux joueurs les informations qui servent à créer la Table, le Sac, le Plateau
     private void demandeNombreJoueur(){
-        System.out.println("Combien de joueurs vont jouer ? (format : 2) ");
+        System.out.println("Combien de joueurs vont jouer (maximum 6) ? (format : 2) ");
         this.nbJoueurs = sc.nextInt();
     }
     public String demandeNomJoueur(){

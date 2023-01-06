@@ -18,7 +18,7 @@ public class SacCarcassonne extends Sac {
                             
             try {
                 // new File("src/Image tuile").listFiles();
-                Collections.addAll(listeImages, new File("Image tuile").listFiles()); //src/
+                Collections.addAll(listeImages, new File("src/Image tuile").listFiles());
             } catch (Exception e) {
                 e.printStackTrace();
             }

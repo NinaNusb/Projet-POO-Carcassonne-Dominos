@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 public class TuileCarcassonne extends Tuile {
     // attributs
-    private File chemin;
-    private ArrayList<Lieu> partisansPoses;
-    private ArrayList<Joueur> possesseursPartisans;
-    private boolean blason;
+    private final File chemin;
+    private final ArrayList<Lieu> partisansPoses;
+    private final ArrayList<Joueur> possesseursPartisans;
+    private final boolean blason;
     private int nbPivot;
 
     // constructeur

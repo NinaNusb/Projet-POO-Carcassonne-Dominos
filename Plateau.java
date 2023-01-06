@@ -1,4 +1,3 @@
-import java.io.File;
 import java.util.ArrayList;
 
 public abstract class Plateau{
@@ -7,7 +6,7 @@ public abstract class Plateau{
     protected final ArrayList<ArrayList<Integer>> matriceAdjacence;
 
     // constructeur
-    public Plateau(Sac sac){
+    public Plateau(){
 
         this.plateau = new ArrayList<>();
         this.plateau.add(new ArrayList<>());
