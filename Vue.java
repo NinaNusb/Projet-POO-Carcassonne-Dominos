@@ -55,16 +55,21 @@ public class Vue extends JFrame {
 
         // création de la vue qui symbolisera le plateau
         this.vuePlateau.setLayout(new GridLayout(jeu.getP().getPlateau().size(), jeu.getP().getPlateau().get(0).size()));
-        // ce plateau est une matrice de bouton
+        // debug tuile en trop à l'initialisation du plateau
+        boolean trouver = false;
+        // ce plateau est une matrice de boutons
         for(int i = 0; i < jeu.getP().getPlateau().size(); i++){
             this.boutonPlateau.add(new ArrayList<>());
             for(int j = 0; j < jeu.getP().getPlateau().get(0).size(); j++){
                 // création du bouton dont la taille est adaptée au nombre de boutons nécessaires
                 JButton btn = new JButton();
                 btn.setSize(new Dimension(Math.min(800/jeu.getP().getPlateau().get(0).size(), 800/jeu.getP().getPlateau().size()), Math.min(800/jeu.getP().getPlateau().get(0).size(),800/jeu.getP().getPlateau().size())));
-
+                // éviter affichage et supprimer la tuile en trop
+                if (!jeu.getP().getPlateau().get(i).get(j).estVide() && trouver){
+                    jeu.getP().getPlateau().get(i).get(j).setTuile(null);
+                }
                 // s'il y a une tuile présente sur cette case du plateau
-                if(!jeu.getP().getPlateau().get(i).get(j).estVide()) {
+                if(!jeu.getP().getPlateau().get(i).get(j).estVide() && !trouver) {
 
                     if (jeu.getParametres().getTypeDeJeu().equals("c")) {
                         // on affiche l'image
@@ -117,6 +122,7 @@ public class Vue extends JFrame {
                         Icon icon = new ImageIcon(bi2);
 
                         btn = new JButton(icon);
+                        trouver = true;
                         btn.setSize(new Dimension(110,110));
                     }
                 }
@@ -137,7 +143,7 @@ public class Vue extends JFrame {
             // pour chaque joueur autour de la table
             for (Joueur j : jeu.getParametres().getTable().getJoueurs()) {
                 // on affiche son nombre de partisans
-                JLabel label = new JLabel(j.getNom() + " a " + ((JoueurCarcassonne) j).getNbPartisans() + " meeples en main.\n");
+                JLabel label = new JLabel(j.getNom() + " a " + ((JoueurCarcassonne) j).getNbPartisans() + " partisans en main.\n");
                 label.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
                 label.setHorizontalAlignment(JLabel.CENTER);
                 this.panneauChoix.add(label);
@@ -145,11 +151,19 @@ public class Vue extends JFrame {
         }
 
         // affichage du joueur qui doit jouer
+        this.panneauChoix.add(Box.createHorizontalStrut(330));
         String annonce = "C'est à "+ jeu.getJoueurQuiJoue().getNom() +" de jouer. Voici la tuile piochée :";
         JLabel ligne1 = new JLabel(annonce);
-        ligne1.setPreferredSize(new Dimension(this.getWidth()/3, 50));
-        ligne1.setHorizontalAlignment(JLabel.CENTER);
+        // ligne1.setPreferredSize(new Dimension(this.getWidth()/3, 50));
+        // ligne1.setHorizontalAlignment(JLabel.CENTER);
         this.panneauChoix.add(ligne1);
+        
+        // affichage de la tuile piochée
+        this.tuilePiochee.setPreferredSize(new Dimension(110,110));
+        JPanel tuilePiochee = new ImagePane(path); // TODO ligne utile ?
+        tuilePiochee.setPreferredSize(new Dimension(110,110)); // TODO ligne utile ?
+        this.panneauChoix.add(this.tuilePiochee);
+
         // affichage du bouton pour tourner la tuile
         JButton tournerButton = new JButton("Tourner la tuile ");
         this.panneauChoix.add(tournerButton);
@@ -159,13 +173,27 @@ public class Vue extends JFrame {
         // affichage du bouton pour abandonner la partie
         JButton abandonnerButton = new JButton("Abandonne la partie");
         this.panneauChoix.add(abandonnerButton);
+                
+        // affichage bouttons partisans
+        String demandeAction = "Voulez-vous ajouter un partisan à la tuile posée?";
+        JLabel ajouterPartisan = new JLabel(demandeAction);
+        ajouterPartisan.setPreferredSize(new Dimension(this.getWidth() / 1, 50));
+        // ajouterPartisan.setHorizontalAlignment(JLabel.CENTER);
+        // this.panneauChoix.add(Box.createHorizontalStrut(330));
+        this.panneauChoix.add(ajouterPartisan);
         
-        
-        // affichage de la tuile piochée
-        this.tuilePiochee.setPreferredSize(new Dimension(110,110));
-        JPanel tuilePiochee = new ImagePane(path); // TODO ligne utile ?
-        tuilePiochee.setPreferredSize(new Dimension(110,110)); // TODO ligne utile ?
-        this.panneauChoix.add(this.tuilePiochee);
+        JButton btnPartisanHaut = new JButton("Placer un partisan en haut");
+        // btnPartisanHaut.setPreferredSize(new Dimension(this.getWidth() / 2, 50));
+        this.panneauChoix.add(btnPartisanHaut);
+        JButton btnPartisanBas = new JButton("Placer un partisan en bas");
+        // btnPartisanBas.setPreferredSize(new Dimension(this.getWidth() / 2, 50));
+        this.panneauChoix.add(btnPartisanBas);
+        JButton btnPartisanDroite = new JButton("Placer un partisan à droite");
+        // btnPartisanDroite.setPreferredSize(new Dimension(this.getWidth() / 2, 50));
+        this.panneauChoix.add(btnPartisanDroite);
+        JButton btnPartisanGauche = new JButton("Placer un partisan à gauche");
+        // btnPartisanGauche.setPreferredSize(new Dimension(this.getWidth() / 2, 50));
+        this.panneauChoix.add(btnPartisanGauche);
         
         // ajout de tous les composants à la fenêtre
         this.window.setLayout(new BoxLayout(this.window, BoxLayout.LINE_AXIS));
@@ -267,7 +295,7 @@ public class Vue extends JFrame {
                                 else {
                                     // TODO
                                 }
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
                         }
@@ -347,6 +375,45 @@ public class Vue extends JFrame {
                             
                             btn.setSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
 
+                              // Changer couleur de chaque lettre en fonction du joueur qui a posé le partisan
+                            // sauvegarde tuile posée
+                            ((JoueurCarcassonne)jeu.getJoueurQuiJoue()).setTuile(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()));
+
+                            // Affichage partisans avec la couleur du joueur
+                            JLabel partisan = new JLabel(); 
+                            String h = "<p>H</p><br><br>";
+                            String g = "<p>G</p>";
+                            String d = "<p>D</p><br><br>";
+                            String b = "<p>B</p>";
+                            
+                            // récupérer liste des lieux de la tuile
+                            ArrayList<Lieu> listPartisans = ((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPartisansPoses(); //tuile pas
+                            // System.out.println("****" +listPartisans.size());
+                            int k = 0;
+                            for (Lieu l : listPartisans){
+                                //System.out.println("####" + l.getPosition());
+                                JoueurCarcassonne possesseursPartisans = (JoueurCarcassonne)((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPossesseursPartisans().get(k);
+                                // récupérer nom lieu et changer couleurs en fonction du nom du joueur et nom du lieu
+                                if (l.getPosition().equals("H")){
+                                    h = "<p style='color:"+ possesseursPartisans.getCouleur() +"'>H</p><br><br>";
+                                }
+                                else if (l.getPosition().equals("D")){
+                                    d = "&nbsp;&nbsp;&nbsp;&nbsp;<p style='color:"+ possesseursPartisans.getCouleur() +"'>D</p><br><br>";
+                                }
+                                else if (l.getPosition().equals("B")){
+                                    b = "&nbsp;&nbsp;<p style='color:"+ possesseursPartisans.getCouleur() +"'>B</p>";
+                                }
+                                else if (l.getPosition().equals("G")){
+                                    g = "<p style='color:"+ possesseursPartisans.getCouleur() +"'>G</p>";
+                                }
+                                
+                                k ++;
+                            }
+                            partisan.setText("<html>" + h + g + d + b + "</html>");
+                            // if (btn.getIcon() != null){ // TODO: icone vide?
+                                btn.add(partisan);
+
+                            // }
         
                         }
                         else {
@@ -374,6 +441,7 @@ public class Vue extends JFrame {
                     btn.setSize(new Dimension(Math.min(800 / jeu.getP().getPlateau().get(0).size(), 800 / jeu.getP().getPlateau().size()), Math.min(800 / jeu.getP().getPlateau().get(0).size(), 800 / jeu.getP().getPlateau().size())));
 
                     if (!jeu.getP().getPlateau().get(i).get(j).estVide()) {
+                        // System.out.println("#####" + i + "," + j);
                         if(jeu.getParametres().getTypeDeJeu().equals("c")) {
                             ImageIcon imageIcon = new ImageIcon(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getChemin().getAbsolutePath());
                             Image image = imageIcon.getImage();
@@ -387,48 +455,51 @@ public class Vue extends JFrame {
                             btn = new JButton(r1); 
                             btn.setSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
 
+                            // Changer couleur de chaque lettre en fonction du joueur qui a posé le partisan
                             // sauvegarde tuile posée
                             ((JoueurCarcassonne)jeu.getJoueurQuiJoue()).setTuile(((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()));
 
-                            // Affichage partisans avec le nom du joueur
-                            JLabel partisanH = new JLabel("H"); 
-                            JLabel partisanD = new JLabel("D"); 
-                            JLabel partisanG = new JLabel("G"); 
-                            JLabel partisanB = new JLabel("B"); 
-                            // changer couleur de chaque lettre en fonction du joueur qui a posé le partisan
+                            // Affichage partisans avec la couleur du joueur
+                            JLabel partisan = new JLabel(); 
+                            String h = "<p>H</p><br><br>";
+                            String g = "<p>G</p>";
+                            String d = "<p>D</p><br><br>";
+                            String b = "<p>B</p>";
+                            
                             // récupérer liste des lieux de la tuile
                             ArrayList<Lieu> listPartisans = ((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPartisansPoses(); //tuile pas
-                            // ArrayList<Lieu> listPartisans = new ArrayList<>();
-                            // listPartisans.add(new Ville());
                             // System.out.println("****" +listPartisans.size());
                             int k = 0;
                             for (Lieu l : listPartisans){
                                 //System.out.println("####" + l.getPosition());
-                                Joueur possesseursPartisans = ((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPossesseursPartisans().get(k);
+                                JoueurCarcassonne possesseursPartisans = (JoueurCarcassonne)((TuileCarcassonne) jeu.getP().getPlateau().get(i).get(j).getTuile()).getPossesseursPartisans().get(k);
                                 // récupérer nom lieu et changer couleurs en fonction du nom du joueur et nom du lieu
                                 if (l.getPosition().equals("H")){
-                                    partisanH.setForeground(Color.BLUE);
+                                    h = "<p style='color:"+ possesseursPartisans.getCouleur() +"'>H</p><br><br>";
                                 }
                                 else if (l.getPosition().equals("D")){
-                                    partisanH.setForeground(Color.GREEN);
+                                    d = "&nbsp;&nbsp;&nbsp;&nbsp;<p style='color:"+ possesseursPartisans.getCouleur() +"'>D</p><br><br>";
                                 }
                                 else if (l.getPosition().equals("B")){
-                                    partisanH.setForeground(Color.WHITE);
+                                    b = "&nbsp;&nbsp;<p style='color:"+ possesseursPartisans.getCouleur() +"'>B</p>";
                                 }
                                 else if (l.getPosition().equals("G")){
-                                    partisanH.setForeground(Color.ORANGE);
+                                    g = "<p style='color:"+ possesseursPartisans.getCouleur() +"'>G</p>";
                                 }
                                 
                                 k ++;
                             }
-                            btn.add(partisanH);
-                            btn.add(partisanG);
-                            btn.add(partisanD);
-                            btn.add(partisanB);
+                            partisan.setText("<html>" + h + g + d + b + "</html>");
+                            // if (btn.getIcon() != null){ // TODO: icone vide?
+                                btn.add(partisan);
+
+                            // }
+                                
                         }
                         else {
                             // TODO
                         }
+
                     } else {
                         btn.setEnabled(jeu.getP().getMatriceAdjacence().get(i).get(j) != 0);
                     }
@@ -489,7 +560,7 @@ public class Vue extends JFrame {
                                     else {
                                         // TODO
                                     }
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
                             }
@@ -510,41 +581,60 @@ public class Vue extends JFrame {
             this.panneauChoix.removeAll();
             this.panneauChoix.setBackground(new Color(50, 200, 255));
             this.panneauChoix.setPreferredSize(new Dimension(500, 800));
+            
+            String annonce = "C'est à " + jeu.getJoueurQuiJoue().getNom() + " de jouer. Voici la tuile piochée :";
+            JLabel ligne1 = new JLabel(annonce);
+            ligne1.setPreferredSize(new Dimension(this.getWidth() / 1, 50));
+            ligne1.setHorizontalAlignment(JLabel.CENTER);
+            this.panneauChoix.add(ligne1);
+
+            // tuile piochée
+            // tuilePiochee.setPreferredSize(new Dimension(110, 110));
+            // this.tuilePiochee = tuilePiochee;
+            this.tuilePiochee.setPreferredSize(new Dimension(110, 110));
+            this.panneauChoix.add(this.tuilePiochee);
+
+            // bouttons actions
+            JButton tournerButton = new JButton("Tourner la tuile");
+            tournerButton.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
+            this.panneauChoix.add(tournerButton);
+            JButton defausserButton = new JButton("Défausser la tuile");
+            defausserButton.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
+            this.panneauChoix.add(defausserButton);
+            JButton abandonnerButton = new JButton("Abandonne la partie");
+            abandonnerButton.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
+            this.panneauChoix.add(abandonnerButton);
+            
             for(Joueur j : jeu.getParametres().getTable().getJoueurs()){
-                JLabel label = new JLabel(j.getNom() + " a " + ((JoueurCarcassonne)j).getNbPartisans() + " meeples en main.\n");
-                label.setPreferredSize(new Dimension(this.getWidth()/3, 50));
+                JLabel label = new JLabel(j.getNom() + " a " + ((JoueurCarcassonne)j).getNbPartisans() + " partisans en main.\n");
+                label.setPreferredSize(new Dimension(this.getWidth()/2, 50));
                 label.setHorizontalAlignment(JLabel.CENTER);
                 this.panneauChoix.add(label);
             }
-            String annonce = "C'est à " + jeu.getJoueurQuiJoue().getNom() + " de jouer. Voici la tuile piochée :";
-            JLabel ligne1 = new JLabel(annonce);
-            ligne1.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
-            ligne1.setHorizontalAlignment(JLabel.CENTER);
-            this.panneauChoix.add(ligne1);
+            String demandeAction = "Voulez-vous ajouter un partisan à la tuile posée?";
+            JLabel ajouterPartisan = new JLabel(demandeAction);
+            ajouterPartisan.setPreferredSize(new Dimension(this.getWidth() / 1, 50));
+            ajouterPartisan.setHorizontalAlignment(JLabel.CENTER);
+            this.panneauChoix.add(ajouterPartisan);
         if(jeu.getParametres().getTypeDeJeu().equals("c")) {
             File file = ((TuileCarcassonne) jeu.getJoueurQuiJoue().getTuileEnMain()).getChemin();
             BufferedImage path = ImageIO.read(file);
             JPanel tuilePiochee = new ImagePane(path);
         }
-            tuilePiochee.setPreferredSize(new Dimension(110, 110));
-            this.tuilePiochee = tuilePiochee;
-            JButton tournerButton = new JButton("Tourner la tuile");
-            this.panneauChoix.add(tournerButton);
-            JButton defausserButton = new JButton("Défausser la tuile");
-            this.panneauChoix.add(defausserButton);
-            JButton abandonnerButton = new JButton("Abandonne la partie");
-            this.panneauChoix.add(abandonnerButton);
-            // affichage bouttons partisans
-            JButton btnPartisanHaut = new JButton("Partisan haut");
+                    
+            // bouttons partisans
+            JButton btnPartisanHaut = new JButton("Placer un partisan en haut");
+            btnPartisanHaut.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
             this.panneauChoix.add(btnPartisanHaut);
-            JButton btnPartisanBas = new JButton("Partisan bas");
-            this.panneauChoix.add(btnPartisanBas);
-            JButton btnPartisanDroite = new JButton("Partisan droite");
+            JButton btnPartisanDroite = new JButton("Placer un partisan à droite");
+            btnPartisanDroite.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
             this.panneauChoix.add(btnPartisanDroite);
-            JButton btnPartisanGauche = new JButton("Partisan gauche");
+            JButton btnPartisanGauche = new JButton("Placer un partisan à gauche");
+            btnPartisanGauche.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
             this.panneauChoix.add(btnPartisanGauche);
-            this.tuilePiochee.setPreferredSize(new Dimension(110, 110));
-            this.panneauChoix.add(this.tuilePiochee);
+            JButton btnPartisanBas = new JButton("Placer un partisan en bas");
+            btnPartisanBas.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
+            this.panneauChoix.add(btnPartisanBas);
             this.window.add(panneauChoix);
 
         // si le joueur qui doit jouer est un ordinateur
