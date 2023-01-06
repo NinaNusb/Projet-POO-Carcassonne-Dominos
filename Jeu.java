@@ -290,12 +290,15 @@ public class Jeu {
 
             // si on souhaite jouer la tuile
             if (jouer) {
-                // on l'ajoute au plateau
-                this.p.ajouterTuile(emplacementLibre, this.joueurQuiJoue.getTuileEnMain());
-                this.joueurQuiJoue.setTuileEnMain(null);
-                // on compte les points ainsi gagnés si on joue à dominos
-                if(this.getParametres().getTypeDeJeu().equals("d")) {
-                    this.joueurQuiJoue.gagnePoints(emplacementLibre, this.p);
+                if (this.joueurQuiJoue.getType().equals("o")){
+                    // on l'ajoute au plateau
+                    this.p.ajouterTuile(emplacementLibre, this.joueurQuiJoue.getTuileEnMain());
+                    this.joueurQuiJoue.setTuileEnMain(null);
+                    // on compte les points ainsi gagnés si on joue à dominos
+                    if(this.getParametres().getTypeDeJeu().equals("d")) {
+                    this.joueurQuiJoue.gagnePoints(emplacementLibre, this.p);  
+                }
+              
                 }
             }
             // si on ne souhaite pas jouer la tuile
