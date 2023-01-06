@@ -4,6 +4,7 @@ public class JoueurCarcassonne extends Joueur {
     // attributs
     public int nbPartisans;
     private Tuile tuilePosee;
+    private String couleur;
 
     // constructeur
     public JoueurCarcassonne(String nom){
@@ -19,8 +20,16 @@ public class JoueurCarcassonne extends Joueur {
         return this.tuilePosee;
     }
 
+    public String getCouleur(){
+        return this.couleur;
+    }
+
     public void setTuile(Tuile t){
         this.tuilePosee = t;
+    }
+
+    public void setCouleur(String c){
+        this.couleur = c;
     }
 
     public boolean placePartisan(TuileCarcassonne t, Lieu lieu){
@@ -32,11 +41,11 @@ public class JoueurCarcassonne extends Joueur {
             return false;
         }
         // Demande d'action quand le joueur a des partisans à disposition
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Souhaitez-vous placer un de vos partisans sur cette tuile? Entrez 'o' pour oui ou 'n' pour non. (format : o)");
-        String rep = sc.nextLine();
-        // Si le joueur souhaite placer un partisan sur la tuile jouée:
-        if (rep.equals("o")){
+        // Scanner sc = new Scanner(System.in);
+        // System.out.println("Souhaitez-vous placer un de vos partisans sur cette tuile? Entrez 'o' pour oui ou 'n' pour non. (format : o)");
+        // String rep = sc.nextLine();
+        // // Si le joueur souhaite placer un partisan sur la tuile jouée:
+        // if (rep.equals("o")){
             // son nombre de partisans diminue de 1
             this.nbPartisans -= 1;
             // la tuile concernée reçoit un partisan (ainsi qu'une trace du joueur qui l'a placé, càd son indice)
@@ -47,8 +56,8 @@ public class JoueurCarcassonne extends Joueur {
             // ajoute lieu à liste des lieux qui ont un partisan
             t.getPartisansPoses().add(lieu);
             return true;
-        }
-        return false;
+        //}
+        //return false;
     }
 
     // public void recuperePartisan(TuileCarcassonne t){
