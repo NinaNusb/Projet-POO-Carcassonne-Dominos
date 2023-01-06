@@ -131,7 +131,7 @@ public class Vue extends JFrame {
         this.panneauChoix.setBackground(new Color(50, 200,255));
         this.panneauChoix.setPreferredSize(new Dimension(500, 800));
 
-        JLabel l = new JLabel("il y a " + (jeu.getParametres().getNbTuiles() - 1) + " tuiles restantes dans le sac.");
+        JLabel l = new JLabel("Il y a " + jeu.getSac().getLength() + " tuiles restantes dans le sac.");
         l.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
         l.setHorizontalAlignment(JLabel.CENTER);
         this.panneauChoix.add(l);
@@ -529,7 +529,7 @@ public class Vue extends JFrame {
     }
 
     private void afficheTable(Jeu jeu) {
-        JLabel l = new JLabel("il y a " + (jeu.getParametres().getNbTuiles() - 1) + " tuiles restantes dans le sac.");
+        JLabel l = new JLabel("Il y a " + jeu.getSac().getLength() + " tuiles restantes dans le sac.");
         l.setPreferredSize(new Dimension(this.getWidth() / 3, 50));
         l.setHorizontalAlignment(JLabel.CENTER);
         this.panneauChoix.add(l);
@@ -643,16 +643,21 @@ public class Vue extends JFrame {
     // méthode pour mettre à jour le panneau de choix dans le cas où le sac est vide
     private void miseAJourPanneauChoixSacVide(Jeu jeu){
         this.window.remove(panneauChoix);
+        this.tuilePiochee = null;
         this.panneauChoix.removeAll();
         this.panneauChoix.setBackground(new Color(50, 200, 255));
         this.panneauChoix.setPreferredSize(new Dimension(500, 800));
         String annonce = "Le jeu est terminé, le sac est vide.";
         annoncePoints(jeu, annonce);
+
+        pack();
+        setVisible(true);
     }
 
     // méthode pour mettre à jour le panneau de choix dans le cas d'un abandon
     private void miseAJourPanneauChoixAbandon(Joueur joueur, Jeu jeu) throws IOException {
         this.window.remove(panneauChoix);
+        this.tuilePiochee = null;
         this.panneauChoix.removeAll();
         this.panneauChoix.setBackground(new Color(50, 200, 255));
         this.panneauChoix.setPreferredSize(new Dimension(500, 800));
